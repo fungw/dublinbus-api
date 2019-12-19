@@ -4,7 +4,6 @@ require 'json'
 require 'sinatra/base'
 require 'sinatra/jsonp'
 require 'haml'
-require 'sass'
 
 module Bus
   class Views

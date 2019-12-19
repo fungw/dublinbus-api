@@ -5,14 +5,13 @@ require 'json'
 require 'sinatra/base'
 require 'sinatra/jsonp'
 require 'haml'
-require 'sass'
 
 module Bus
   class Application < Sinatra::Base
     helpers Sinatra::Jsonp
 
     configure do
-      API = Api.new(YAML::load(File.open('service-info.yml')))
+      API = Api.new(YAML::load(File.open('./service-info.yml')))
     end
 
     get '/' do
