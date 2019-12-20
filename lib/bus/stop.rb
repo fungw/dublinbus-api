@@ -36,6 +36,7 @@ module Bus
 
   class Stop
     attr_reader :id, :name, :location, :buses, :updated, :services
+    LOG_FORMAT = /(\d{2}:\d{2})/
 
     def initialize(id, name, location)
       @id = id
@@ -66,10 +67,11 @@ module Bus
     def update!
       puts "update!"
       return self if (Time.now.utc - @updated) <= 30
-      source = RestClient.get "http://rtpi.ie/Text/Pages/WebDisplay.aspx?stopRef=#{@id}"
+      filteredLeadingZeroes = @id.sub!(/^0/, '')
+      source = RestClient.get "http://rtpi.ie/Text/WebDisplay.aspx?stopRef=#{filteredLeadingZeroes}"
       doc = REXML::Document.new source
       @buses = doc.root.get_elements('//table/tr').drop(1).map { |tr|
-        Bus.new(tr.elements[1].text, tr.elements[2].text, tr.elements[3].text.to_i)
+        Bus.new(tr.elements[1].text, tr.elements[3].text, tr.elements[5].text)
       }
       @updated = Time.now.utc
       self
